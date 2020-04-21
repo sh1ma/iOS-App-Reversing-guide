@@ -11,7 +11,7 @@ jobs:
     # Standard usage
     - uses:  helaili/jekyll-action@2.0.0
       env:
-        JEKYLL_PAT: ${{ secrets.JEKYLL_PAT }}
+        JEKYLL_PAT: ${{ secrets.GITHUB_TOKEN }}
         LC_ALL: "C.UTF-8"
         LANG: "ja_JP.UTF-8"
         LANGUAGE: "ja_JP.UTF-8"
