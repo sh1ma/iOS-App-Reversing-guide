@@ -1,6 +1,11 @@
 - title: "入門"
   url: "docs/getting-started"
+- title: "サイドコンテンツ"
+  url: "docs/side-content"
+  children:
+    - title: "ARMアセンブリ"
+      url: "docs/side-content/arm-assembly"
 - title: "サポート"
   url: "support"
-- title: "News"
+- title: "ブログ"
   url: "news"
