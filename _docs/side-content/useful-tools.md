@@ -21,6 +21,10 @@ title: 有用なツール(用途別)
 ## 脱獄済みiOSデバイス用ファイルマネージャ
 - [Filza(リンクはcydiaリポジトリ)](http://tigisoftware.com/cydia/)
 
+## 通信解析
+- [mitmproxy - TUIで動くプロキシツール。スクリプティングもできる。](https://mitmproxy.org/)
+- [Burp Suite - GUIで動くプロキシツール。有料版じゃないと物足りないかも](https://portswigger.net/burp)
+
 ## 動的解析
 - lldb
 - debugserver
