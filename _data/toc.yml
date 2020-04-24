@@ -7,6 +7,8 @@
       url: "docs/side-content/arm-assembly"
     - title: "有用なツール(用途別)"
       url: "docs/side-content/useful-tools"
+    - title: "lldbの使い方"
+      url: "docs/side-content/lldb"
 - title: "サポート"
   url: "support"
 - title: "ブログ"
