@@ -9,16 +9,16 @@ title: 有用なツール(用途別)
 - [xia0LLDB `dumpdecrypted -X`(lldbプラグイン)](https://github.com/4ch12dy/xia0LLDB#dumpdecrypted-20190922)
 - [CrackerXI+ - デバイス単体で抽出可能(リンクはcydiaリポジトリ)](http://pokego2.com/)
 
-# SSL Pinningを回避する
+## SSL Pinningを回避する
 - [Frida-Scripts / ssl_bypass.js - Github(frida必須)](https://github.com/machoreverser/Frida-Scripts/blob/master/ssl_bypass.js)
 
-# 脱獄検知を回避する
+## 脱獄検知を回避する
 - [BreakThrough(リンクはcydiaリポジトリ)](http://ftp.sident.net/cydia-beta)
 - [Liberty Lite(リンクはcydiaリポジトリ)](https://ryleyangus.com/repo)
 - [FlyJB(リンクはcydiaリポジトリ)](https://repo.xsf1re.kr/)
 - FLEX 3(関数フックができるTweak。標準リポジトリでインストール可能)
 
-# 脱獄済みiOSデバイス用ファイルマネージャ
+## 脱獄済みiOSデバイス用ファイルマネージャ
 - [Filza(リンクはcydiaリポジトリ)](http://tigisoftware.com/cydia/)
 
 ## 動的解析
