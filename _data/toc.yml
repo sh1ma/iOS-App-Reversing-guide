@@ -5,6 +5,8 @@
   children:
     - title: "ARMアセンブリ"
       url: "docs/side-content/arm-assembly"
+    - title: "有用なツール(用途別)"
+      url: "docs/side-content/useful-tools"
 - title: "サポート"
   url: "support"
 - title: "ブログ"
