@@ -1,5 +1,7 @@
 - title: "入門"
   url: "docs/getting-started"
+- title: "様々な脱獄検知とそれらの回避"
+  url: "docs/jb-detection"
 - title: "サイドコンテンツ"
   url: "docs/side-content"
   children:
