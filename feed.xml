@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>iOS App RE Guide</title>
+    <description>iOSアプリケーションのリバースエンジニアリングについての包括的なガイドを目指しています。
+</description>
+    <link>https://4masaka.github.io/iOS-App-Reversing-guide/</link>
+    <atom:link href="https://4masaka.github.io/iOS-App-Reversing-guide/feed.xml" rel="self" type="application/rss+xml"/>
+    <pubDate>Wed, 03 Jun 2020 12:56:30 +0000</pubDate>
+    <lastBuildDate>Wed, 03 Jun 2020 12:56:30 +0000</lastBuildDate>
+    <generator>Jekyll v3.8.5</generator>
+    
+  </channel>
+</rss>

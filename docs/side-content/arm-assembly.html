@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-language" content="ja">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>ARMアセンブリ</title>
+  <meta name="description" content="ARM アセンブリ">
+  <meta name="author" content="Sh1ma">
+  <meta name="theme-color" content="red">
+  <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700|Roboto+Mono">
+  <style>body,input{font-family:"Roboto","Helvetica Neue",Helvetica,Arial,sans-serif}code,kbd,pre{font-family:"Roboto Mono","Courier New",Courier,monospace}</style>
+
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="canonical" href="https://4masaka.github.io/iOS-App-Reversing-guide/docs/side-content/arm-assembly">
+  <link rel="alternate" type="application/rss+xml" title="iOS App RE Guide" href="https://4masaka.github.io/iOS-App-Reversing-guide/feed.xml">
+  <meta name="lang:clipboard.copy" content="Copy to clipboard">
+  <meta name="lang:clipboard.copied" content="Copied to clipboard">
+  <meta name="lang:search.language" content="ja">
+  <meta name="lang:search.pipeline.stopwords" content="True">
+  <meta name="lang:search.pipeline.trimmer" content="True">
+  <meta name="lang:search.result.none" content="No matching documents">
+  <meta name="lang:search.result.one" content="1 matching document">
+  <meta name="lang:search.result.other" content="# matching documents">
+  <meta name="lang:search.tokenizer" content="[\s\-]+">
+  <script src="/iOS-App-Reversing-guide/assets/js/modernizr.74668098.js"></script>
+  <link rel="shortcut icon" href="/iOS-App-Reversing-guide/assets/img/favicon.png">
+  <link rel="stylesheet" href="/iOS-App-Reversing-guide/assets/css/main.css">
+  <link rel="stylesheet" href="/iOS-App-Reversing-guide/assets/css/palette.css">
+  <meta name="google-site-verification" content="dbdH1uC4JF4oJHLsTFuFsdf4UktooinDx78aPf6AP-Q" />
+
+  <body dir="ltr" data-md-color-primary="red" data-md-color-accent="red">
+    <svg class="md-svg">
+<defs>
+  <svg>
+  <path d="M160 304q0 10-3.125 20.5t-10.75 19-18.125 8.5-18.125-8.5-10.75-19-3.125-20.5 3.125-20.5 10.75-19 18.125-8.5 18.125 8.5 10.75 19 3.125 20.5zM320 304q0 10-3.125 20.5t-10.75 19-18.125 8.5-18.125-8.5-10.75-19-3.125-20.5 3.125-20.5 10.75-19 18.125-8.5 18.125 8.5 10.75 19 3.125 20.5zM360 304q0-30-17.25-51t-46.75-21q-10.25 0-48.75 5.25-17.75 2.75-39.25 2.75t-39.25-2.75q-38-5.25-48.75-5.25-29.5 0-46.75 21t-17.25 51q0 22 8 38.375t20.25 25.75 30.5 15 35 7.375 37.25 1.75h42q20.5 0 37.25-1.75t35-7.375 30.5-15 20.25-25.75 8-38.375zM416 260q0 51.75-15.25 82.75-9.5 19.25-26.375 33.25t-35.25 21.5-42.5 11.875-42.875 5.5-41.75 1.125q-19.5 0-35.5-0.75t-36.875-3.125-38.125-7.5-34.25-12.875-30.25-20.25-21.5-28.75q-15.5-30.75-15.5-82.75 0-59.25 34-99-6.75-20.5-6.75-42.5 0-29 12.75-54.5 27 0 47.5 9.875t47.25 30.875q36.75-8.75 77.25-8.75 37 0 70 8 26.25-20.5 46.75-30.25t47.25-9.75q12.75 25.5 12.75 54.5 0 21.75-6.75 42 34 40 34 99.5z" fill="currentColor"></path></svg>
+</defs></svg>
+
+    <input class=md-toggle data-md-toggle=drawer type=checkbox id=__drawer autocomplete=off>
+<input class=md-toggle data-md-toggle=search type=checkbox id=__search autocomplete=off>
+    <label class=md-overlay data-md-component=overlay for=__drawer></label> <a href="#armアセンブリ" tabindex=1 class=md-skip> Skip to content </a>
+    <header class=md-header data-md-component=header>
+        <nav class="md-header-nav md-grid">
+            <div class=md-flex>
+                <div class="md-flex__cell md-flex__cell--shrink">
+                  <a class="md-header-nav__button md-logo" href="https://4masaka.github.io" title="iOS App RE Guide">
+                    <i class="md-icon" style="margin-top:5px"></i></a>
+                </div>
+                <div class="md-flex__cell md-flex__cell--shrink">
+                    <label class="md-icon md-icon--menu md-header-nav__button" for=__drawer></label>
+                </div>
+                <div class="md-flex__cell md-flex__cell--stretch">
+                    <div class="md-flex__ellipsis md-header-nav__title" data-md-component=title> 
+                        <span class=md-header-nav__topic>iOS App RE Guide</span>
+                        <span class=md-header-nav__topic>ARMアセンブリ</span>
+                    </div>
+                </div>
+                <div class="md-flex__cell md-flex__cell--shrink">
+                    <label class="md-icon md-icon--search md-header-nav__button" for=__search></label>
+                    <div class=md-search data-md-component=search role=dialog>
+                        <label class=md-search__overlay for=__search></label>
+                        <div class=md-search__inner role=search>
+                            <form class=md-search__form name=search>
+                                <input type=text class=md-search__input name=query placeholder=Search autocapitalize=off autocorrect=off autocomplete=off spellcheck=false data-md-component=query data-md-state=active>
+                                <label class="md-icon md-search__icon" for=__search></label>
+                                <button type=reset class="md-icon md-search__icon" data-md-component=reset tabindex=-1> &#xE5CD; </button>
+                            </form>
+                            <div class=md-search__output>
+                                <div class=md-search__scrollwrap data-md-scrollfix>
+                                    <div class=md-search-result data-md-component=result>
+                                        <div class=md-search-result__meta> Type to start searching </div>
+                                        <ol class=md-search-result__list></ol>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <div class="md-header-nav__source">
+          <a class="md-source" data-md-source="github" href="https://github.com/4masaka/iOS-App-Reversing-guide" title="Go to repository">
+          <div class="md-source__icon" style="padding-top:5px">
+            <i class="fa fa-github fa-3x"></i>
+          </div>
+          <div class="md-source__repository">
+            4masaka/iOS-App-Reversing-guide
+          </div></a>
+        </div>
+      </div>
+    </div>
+  </nav>
+</header>
+
+
+    <div class="md-container">         
+        <main class="md-main">
+            <div class="md-main__inner md-grid" data-md-component="container">
+            <div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
+  <div class="md-sidebar__scrollwrap">
+    <div class="md-sidebar__inner">
+      <nav class="md-nav md-nav--primary" data-md-level="0">
+        <label class="md-nav__title md-nav__title--site" for="__drawer"><span class="md-nav__button md-logo"><i class="md-icon"></i></span> iOS App RE Guide</label>
+        <div class="md-nav__source">
+          <a class="md-source" data-md-source="github" href="https://github.com/4masaka/iOS-App-Reversing-guide" title="Go to repository">
+          <div class="md-source__icon">
+            <svg height="24" viewbox="0 0 24 24" width="24">
+            <use height="24" width="24" xlink:href="#__github"></use></svg>
+          </div>
+          <div class="md-source__repository">
+            4masaka/iOS-App-Reversing-guide
+          </div></a>
+        </div>
+
+        <ul class="md-nav__list" data-md-scrollfix="">
+          <li class="md-nav__item md-nav__item--active">
+            <input class="md-toggle md-nav__toggle" data-md-toggle="toc" id="__toc" type="checkbox"> 
+                <label class="md-nav__link md-nav__link--active" for="__toc">Home</label>
+                  <a class="md-nav__link md-nav__link--active" href="/iOS-App-Reversing-guide/" title="Home">Home</a>
+
+            <nav class="md-nav md-nav--secondary">
+              <label class="md-nav__title" for="__toc">Table of contents</label>
+              <ul class="md-nav__list" data-md-scrollfix="">
+                
+                <li class="md-nav__item">
+                  <a class="md-nav__link" href="/iOS-App-Reversing-guide/docs/getting-started"
+                     id="pancakes-入門" 
+                     title="入門">入門</a>
+                </li>
+                
+                <li class="md-nav__item">
+                  <a class="md-nav__link" href="/iOS-App-Reversing-guide/docs/jb-detection"
+                     id="pancakes-様々な脱獄検知とそれらの回避" 
+                     title="様々な脱獄検知とそれらの回避">様々な脱獄検知とそれらの回避</a>
+                </li>
+                
+                <li class="md-nav__item">
+                  <a class="md-nav__link" href="/iOS-App-Reversing-guide/docs/side-content"
+                     id="pancakes-サイドコンテンツ" 
+                     title="サイドコンテンツ">サイドコンテンツ</a>
+                </li>
+                
+                <li class="md-nav__item">
+                  <a class="md-nav__link" href="/iOS-App-Reversing-guide/support"
+                     id="pancakes-サポート" 
+                     title="サポート">サポート</a>
+                </li>
+                
+                <li class="md-nav__item">
+                  <a class="md-nav__link" href="/iOS-App-Reversing-guide/news"
+                     id="pancakes-ブログ" 
+                     title="ブログ">ブログ</a>
+                </li>
+                
+              </ul>
+            </nav>
+          </li>
+
+          <!-- This navigation is completely for mobile -->
+          <li class="md-nav__item mobile-nav" style="display:none">
+            <a class="md-nav__link" href="/iOS-App-Reversing-guide/docs/getting-started" title="入門">入門</a>
+          </li><li class="md-nav__item mobile-nav" style="display:none">
+            <a class="md-nav__link" href="/iOS-App-Reversing-guide/docs/jb-detection" title="様々な脱獄検知とそれらの回避">様々な脱獄検知とそれらの回避</a>
+          </li><li class="md-nav__item mobile-nav" style="display:none">
+            <a class="md-nav__link" href="/iOS-App-Reversing-guide/docs/side-content" title="サイドコンテンツ">サイドコンテンツ</a>
+          </li><li class="md-nav__item mobile-nav" style="display:none">
+            <a class="md-nav__link" href="/iOS-App-Reversing-guide/support" title="サポート">サポート</a>
+          </li><li class="md-nav__item mobile-nav" style="display:none">
+            <a class="md-nav__link" href="/iOS-App-Reversing-guide/news" title="ブログ">ブログ</a>
+          </li>
+
+          <!-- This navigation is completely for non mobile -->
+         
+         <li class="md-nav__item md-nav__item--nested not-mobile-nav">
+             <a class="md-nav__link pancakes-parent" href="/iOS-App-Reversing-guide/docs/getting-started"
+                id="pancakes-入門" 
+                title="入門">入門</a>
+                
+         </li>
+         <li class="md-nav__item md-nav__item--nested not-mobile-nav">
+             <a class="md-nav__link pancakes-parent" href="/iOS-App-Reversing-guide/docs/jb-detection"
+                id="pancakes-様々な脱獄検知とそれらの回避" 
+                title="様々な脱獄検知とそれらの回避">様々な脱獄検知とそれらの回避</a>
+                
+         </li>
+         <li class="md-nav__item md-nav__item--nested not-mobile-nav">
+             <a class="md-nav__link pancakes-parent" href="#pancakes-サイドコンテンツ"
+                id="pancakes-サイドコンテンツ" 
+                title="サイドコンテンツ">サイドコンテンツ</a>
+                <nav class="md-nav">
+                    <ul class="md-nav__list">
+                        <li class="md-nav__item">
+                        <a href="/iOS-App-Reversing-guide/docs/side-content/arm-assembly" 
+                           title="ARMアセンブリ" style="display:none"
+                           class="md-nav__link pancakes-child">ARMアセンブリ</a>
+                        </li><li class="md-nav__item">
+                        <a href="/iOS-App-Reversing-guide/docs/side-content/useful-tools" 
+                           title="有用なツール(用途別)" style="display:none"
+                           class="md-nav__link pancakes-child">有用なツール(用途別)</a>
+                        </li><li class="md-nav__item">
+                        <a href="/iOS-App-Reversing-guide/docs/side-content/lldb" 
+                           title="lldbの使い方" style="display:none"
+                           class="md-nav__link pancakes-child">lldbの使い方</a>
+                        </li>
+                    </ul>
+              </nav>
+         </li>
+         <li class="md-nav__item md-nav__item--nested not-mobile-nav">
+             <a class="md-nav__link pancakes-parent" href="/iOS-App-Reversing-guide/support"
+                id="pancakes-サポート" 
+                title="サポート">サポート</a>
+                
+         </li>
+         <li class="md-nav__item md-nav__item--nested not-mobile-nav">
+             <a class="md-nav__link pancakes-parent" href="/iOS-App-Reversing-guide/news"
+                id="pancakes-ブログ" 
+                title="ブログ">ブログ</a>
+                
+         </li>
+
+        </ul>
+      </nav>
+    </div>
+  </div>
+</div>
+<div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+  <div class="md-sidebar__scrollwrap">
+    <div class="md-sidebar__inner">
+      <nav class="md-nav md-nav--secondary">
+        <label class="md-nav__title" for="__toc">Table of contents</label>
+        <ul id="nav-toc" class="md-nav__list" data-md-scrollfix="">
+        <!-- toc will be appended here!-->
+        </ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+                <div id="md-container-pancakes">
+                <div class="md-content"> 
+    <article class="md-content__inner md-typeset">
+    <h1 id="arm-アセンブリ">ARM アセンブリ</h1>
+
+<p>静的解析をする際にアセンブリを見る機会があると思います。
+iOS のアーキテクチャはすべて ARM なので、ARM アセンブリの読み方を覚えておくとリバースエンジニアリングを円滑に進めることができます。</p>
+
+<p>ここでは ARM アセンブリのリバースエンジニアリングに必要な部分を掻い摘んで説明します。</p>
+
+<h2 id="アセンブリを読む時に知っておくべき概念">アセンブリを読む時に知っておくべき概念</h2>
+
+<h4 id="オペコードオペランド">オペコード・オペランド</h4>
+
+<p>まずはこの以下のコードを見てください</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>add r1, r1, r0
+</code></pre></div></div>
+
+<p>これはアセンブリの命令の一つです。アセンブリは一行に一命令処理をするのですが、その一行ごとの動作はすべて「オペコード」によって指定されます。</p>
+
+<p>オペコードというのは上のコードの<code class="language-plaintext highlighter-rouge">add</code>の部分のことを指します。<code class="language-plaintext highlighter-rouge">add</code>以外の命令については後述します。</p>
+
+<p>上記の<code class="language-plaintext highlighter-rouge">add</code>命令を Python の文法で表すと以下のようになります。</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">r1</span> <span class="o">=</span> <span class="n">r1</span> <span class="o">+</span> <span class="n">r0</span>
+<span class="c1"># or
+</span><span class="n">r1</span> <span class="o">+=</span> <span class="n">r0</span>
+</code></pre></div></div>
+
+<p>一つでもプログラミング言語を触ったことのある方なら、上記のコードで<code class="language-plaintext highlighter-rouge">add</code>命令が何をするのか理解できたかと思います。</p>
+
+<p>一応解説すると、上記のアセンブリは<strong><code class="language-plaintext highlighter-rouge">r1</code>に<code class="language-plaintext highlighter-rouge">r0</code>と<code class="language-plaintext highlighter-rouge">r1</code>を足した結果を代入</strong>する処理を表しています。</p>
+
+<p>ちなみに<code class="language-plaintext highlighter-rouge">add</code>命令以降につづく<code class="language-plaintext highlighter-rouge">r1</code>, <code class="language-plaintext highlighter-rouge">r1</code>, <code class="language-plaintext highlighter-rouge">r0</code>の部分はそれぞれ<strong>「第一、第二、第三オペランド」</strong>といいます。</p>
+
+<h4 id="レジスタ">レジスタ</h4>
+
+<p>先程登場した<code class="language-plaintext highlighter-rouge">r1</code>や<code class="language-plaintext highlighter-rouge">r0</code>ですが、これはレジスタを意味しています。レジスタは通常のプログラミング言語でいうところの変数と理解して構いません。ただし、名前も個数も決まっており、名前によって役割が違います。</p>
+
+<p>それぞれを紹介します。</p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: center">レジスタ名</th>
+      <th style="text-align: center">別名</th>
+      <th style="text-align: center">説明</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: center">r0</td>
+      <td style="text-align: center"> </td>
+      <td style="text-align: center">汎用レジスタ(関数の第一引数、関数の返り値)</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">r1</td>
+      <td style="text-align: center"> </td>
+      <td style="text-align: center">汎用レジスタ(関数の第二引数)</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">r2</td>
+      <td style="text-align: center"> </td>
+      <td style="text-align: center">汎用レジスタ(関数の第三引数)</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">r3</td>
+      <td style="text-align: center"> </td>
+      <td style="text-align: center">汎用レジスタ(関数の第四引数)</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">r4</td>
+      <td style="text-align: center"> </td>
+      <td style="text-align: center">汎用レジスタ</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">r5</td>
+      <td style="text-align: center"> </td>
+      <td style="text-align: center">汎用レジスタ</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">r6</td>
+      <td style="text-align: center"> </td>
+      <td style="text-align: center">汎用レジスタ</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">r7</td>
+      <td style="text-align: center"> </td>
+      <td style="text-align: center">汎用レジスタ</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">r8</td>
+      <td style="text-align: center"> </td>
+      <td style="text-align: center">汎用レジスタ</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">r9</td>
+      <td style="text-align: center"> </td>
+      <td style="text-align: center">汎用レジスタ</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">r10</td>
+      <td style="text-align: center"> </td>
+      <td style="text-align: center">汎用レジスタ</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">r11</td>
+      <td style="text-align: center"> </td>
+      <td style="text-align: center">汎用レジスタ</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">r12</td>
+      <td style="text-align: center"> </td>
+      <td style="text-align: center">汎用レジスタ</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">r13</td>
+      <td style="text-align: center">sp</td>
+      <td style="text-align: center">スタックポインタ</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">r14</td>
+      <td style="text-align: center">lr</td>
+      <td style="text-align: center">リンクレジスタ</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">r15</td>
+      <td style="text-align: center">pc</td>
+      <td style="text-align: center">プログラムカウンタ</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>上記の表の説明に</p>
+
+<ul>
+  <li>汎用レジスタ</li>
+  <li>スタックポインタ</li>
+  <li>リンクレジスタ</li>
+  <li>プログラムカウンタ</li>
+</ul>
+
+<p>などの言葉が出てきました。それぞれ説明します。</p>
+
+<h4 id="汎用レジスタr0-r12">汎用レジスタ(r0-r12)</h4>
+
+<p>普通の変数だと思って頂いて構いません(ただし<code class="language-plaintext highlighter-rouge">r0</code>~<code class="language-plaintext highlighter-rouge">r4</code>は関数の引数や戻り値に使われるので注意)</p>
+
+<h4 id="スタックポインタr13">スタックポインタ(r13)</h4>
+
+<p>値を格納するスタックメモリの位置を表すレジスタです。</p>
+
+<h4 id="リンクレジスタr14">リンクレジスタ(r14)</h4>
+
+<p>リンクレジスタはサブルーチン(通常のプログラミング言語でいうところの関数)が呼び出された時、呼び出し元に戻るためのアドレスを表します。</p>
+
+<h4 id="プログラムカウンタr15">プログラムカウンタ(r15)</h4>
+
+<p>次の命令のアドレスを表します。</p>
+
+<h2 id="よく使われるオペコード一覧">よく使われるオペコード一覧</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: center">オペコード</th>
+      <th style="text-align: center">意味</th>
+      <th style="text-align: center">使用例</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: center"><code class="language-plaintext highlighter-rouge">mov</code></td>
+      <td style="text-align: center">代入</td>
+      <td style="text-align: center"><code class="language-plaintext highlighter-rouge">mov r0, #0x1</code></td>
+    </tr>
+    <tr>
+      <td style="text-align: center"><code class="language-plaintext highlighter-rouge">b</code></td>
+      <td style="text-align: center">第一オペランドのアドレスに分岐</td>
+      <td style="text-align: center"><code class="language-plaintext highlighter-rouge">b #0x1111</code></td>
+    </tr>
+    <tr>
+      <td style="text-align: center"><code class="language-plaintext highlighter-rouge">bl</code></td>
+      <td style="text-align: center">サブルーチンの呼び出し。<code class="language-plaintext highlighter-rouge">b</code>との違いは後述</td>
+      <td style="text-align: center"><code class="language-plaintext highlighter-rouge">bl #0x2222</code></td>
+    </tr>
+    <tr>
+      <td style="text-align: center"><code class="language-plaintext highlighter-rouge">cmp</code></td>
+      <td style="text-align: center">値が等価かどうかの比較</td>
+      <td style="text-align: center"><code class="language-plaintext highlighter-rouge">cmp r0, r1</code></td>
+    </tr>
+    <tr>
+      <td style="text-align: center"><code class="language-plaintext highlighter-rouge">cbz</code></td>
+      <td style="text-align: center">第一オペランドが 0 だった場合に第二オペランドが指すアドレスに分岐する</td>
+      <td style="text-align: center"><code class="language-plaintext highlighter-rouge">cbz r0, #0x3333</code></td>
+    </tr>
+    <tr>
+      <td style="text-align: center"><code class="language-plaintext highlighter-rouge">cbnz</code></td>
+      <td style="text-align: center"><code class="language-plaintext highlighter-rouge">cbz</code>命令の逆。</td>
+      <td style="text-align: center"><code class="language-plaintext highlighter-rouge">cbnz r0, #0x4444</code></td>
+    </tr>
+    <tr>
+      <td style="text-align: center"><code class="language-plaintext highlighter-rouge">nop</code></td>
+      <td style="text-align: center">何もしない命令</td>
+      <td style="text-align: center"><code class="language-plaintext highlighter-rouge">nop</code></td>
+    </tr>
+    <tr>
+      <td style="text-align: center"><code class="language-plaintext highlighter-rouge">ret</code></td>
+      <td style="text-align: center">サブルーチンから返るための命令</td>
+      <td style="text-align: center"><code class="language-plaintext highlighter-rouge">ret</code></td>
+    </tr>
+  </tbody>
+</table>
+
+<p>いまここにあげた命令だけではありませんが、上記の表に挙げた命令は頻出かつ、デバッグ時に適宣<strong>ブレークポイントを張るべき命令</strong>です。気になる箇所にこれらの命令があるなら積極的に張りましょう。</p>
+
+<h2 id="条件指定">条件指定</h2>
+
+<p>TODO: EQ など</p>
+
+    <script
+  src="https://code.jquery.com/jquery-3.3.1.min.js"
+  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+  crossorigin="anonymous"></script>
+
+<script>
+$(document).ready(function() {
+
+    var toc = $('#nav-toc');
+
+    // Select each header
+    sections = $('#md-container-pancakes h1');
+        $.each(sections, function(idx, v) {
+            section = $(v);
+            var div_id = $(section).attr('id');
+            var div_text = section.text().split('¶')[0];
+            var parent = $("#" + div_id)
+            var content = '<li id="link_' + div_id + '" class="md-nav__item"><a class="md-nav__link" href="#' + div_id + '" title="' + div_text +'">' + div_text +'</a></li>';
+            $(toc).append(content);
+
+            // Add section code to subnavigation
+            var children = $('<nav class="md-nav"><ul class="md-nav__list"></nav></ul>')
+            var contenders = $("#" + div_id).nextUntil( "h1" );
+            $.each(contenders, function(idx, contender){
+               if($(contender).is('h2')) {
+                   var contender_id = $(contender).attr('id');
+                   var contender_text = $(contender).text().split('¶')[0];
+                   var content = '<li class="md-nav__item"><a class="md-nav__link" href="#' + contender_id + '" title="' + contender_text +'">' + contender_text +'</a></li>';
+                   children.append(content);
+                }
+             })
+             $("#link_" + div_id).append(children);
+        });
+    });
+</script>
+
+    <!-- this will parse through the header fields and add a button to open
+     an issue / ask a question on Github. The editable field should be in
+     the post frontend matter, and refer to the label to open the issue for -->
+
+<style>
+.more {
+    float:right;
+    font-size: 1.0rem !important;
+}
+.more:hover {
+    color: cornflowerblue !important;
+}
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 160px;
+    font-weight: 200;
+    box-shadow: 0px 8px 6px 0px rgba(0,0,0,0.2);
+    padding: 0px 10px;
+    z-index: 1;
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+</style>
+<script>
+$(document).ready(function() {
+
+    var divs = $("#h1,h2,h3,h4"); 
+    $.each(divs, function(i,e){
+
+        // Edit
+        var did = $(e).attr('id');
+        var start = '<div class="dropdown more"><span><i class="fa fa-ellipsis-h more" title="Edit"></i></span><div class="dropdown-content">';
+
+        // Edit (assuming deployed under main organization repo)
+        var link = "https://github.com/4masaka/iOS-App-Reversing-guide/edit/master/_docs/side-content/arm-assembly.md#" + did;
+        var button = "<p><a href='" + link + "' target='_blank'>Edit this page</a></p>";
+        start += button;
+
+        // Issues;
+        var link = "https://github.com/4masaka/iOS-App-Reversing-guide/issues/new?labels=question&title=Question:&body=Question on: https://github.com/4masaka/iOS-App-Reversing-guide/tree/master/_docs/side-content/arm-assembly.md%23" + did;
+
+        var button = "<p><a href='" + link + "' target='_blank'>Ask a Question</a></p>";
+        start += button;
+        start += "</div></div>";
+        $(e).append(start)
+
+    })
+});
+</script>
+
+    </article>
+</div>      
+
+                </div>
+            </div>
+        </main>
+    </div>
+    <footer class="c-footer md-footer-nav">
+  <div class="u-container c-footer__container">
+    <nav class="md-footer-nav__inner md-grid">
+         <a href="/iOS-App-Reversing-guide/docs/side-content/lldb" title="lldbの使い方" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
+            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+              <span class="md-flex__ellipsis">
+                <span class="md-footer-nav__direction">
+                  Next
+                </span>
+                lldbの使い方
+              </span>
+            </div>
+            <div class="md-flex__cell md-flex__cell--shrink">
+              <i class="md-icon md-icon--arrow-forward md-footer-nav__button"></i>
+            </div>
+          </a>
+      </nav>
+    </div>
+
+   <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-footer-copyright">
+
+          <div class="md-footer-copyright__highlight">
+            Copyright &copy; 2020 - Sh1ma
+          </div>
+      </div>
+
+
+  <div class="md-footer-social">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+      <a href="https://github.com/4masaka" target="_blank" class="md-footer-social__link fa fa-github"></a>
+      <a href="https://twitter.com/sh1ma" target="_blank" class="md-footer-social__link fa fa-twitter"></a>
+      
+      
+  </div>
+
+    </div>
+  </div>
+
+</footer>
+<script src="/iOS-App-Reversing-guide/assets/js/application.js"></script>
+
+<script>app.initialize({version:"0.17.4", url:{base:'/iOS-App-Reversing-guide'}})</script>
+
+    <script>
+var headers = ["h1", "h2", "h3", "h4"]
+var colors = ["red", "orange", "green", "blue"]
+
+$.each(headers, function(i, header){
+    var color = colors[i];
+    $(header).each(function () {
+        var href=$(this).attr("id");
+        $(this).append('<a class="headerlink" style="color:' + color + '" href="#' + href + '" title="Permanent link">¶</a>')
+    });
+})
+
+// Ensure that sidebar on left has arrows
+$(".pancakes-parent").on('click', function(){ 
+    console.log($(this).next());
+    $(this).next().find('.pancakes-child').toggle();
+    if ($(this).hasClass('open-parent')){
+        $(this).removeClass('open-parent');
+    } else {
+        $(this).addClass('open-parent');
+    }
+})
+</script>
+
+    <script>
+$('h1').first().append('<div></div>')</script>
+
+    <style>
+#scrolltop {
+  display: none; /* Hidden by default */
+  position: fixed; /* Fixed/sticky position */
+  bottom: 20px; /* Place the button at the bottom of the page */
+  right: 30px; /* Place the button 30px from the right */
+  z-index: 99; /* Make sure it does not overlap */
+  border: none; /* Remove borders */
+  outline: none; /* Remove outline */
+  background-color: #8c1515; /* Set a background color */
+  color: white; /* Text color */
+  cursor: pointer; /* Add a mouse pointer on hover */
+  padding: 10px 15px; /* Some padding */
+  border-radius: 100px; /* Rounded corners */
+  font-size: 18px; /* Increase font size */
+  font-weight: 600;
+}
+
+#scrolltop:hover {
+  background-color: #555; /* Add a dark-grey background on hover */
+}
+</style>
+<button onclick="topFunction()" id="scrolltop" title="Go to top">🔝</button>
+
+<script>
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    document.getElementById("scrolltop").style.display = "block";
+  } else {
+    document.getElementById("scrolltop").style.display = "none";
+  }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+  document.body.scrollTop = 0; // For Safari
+  document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
+}
+</script>
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-143467500-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-163987001-1');
+</script>
+
+  </body>
+</html>
